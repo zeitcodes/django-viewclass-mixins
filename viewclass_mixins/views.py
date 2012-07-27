@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
@@ -26,6 +26,29 @@ class LoginMixin(object):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(LoginMixin, self).dispatch(*args, **kwargs)
+
+
+class ObjectOwnerMixin(object):
+    owner_model = None
+    owner_pk_url_kwarg = 'pk'
+    owner_field = 'owner'
+
+    def is_owner(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            queryset =  self.owner_model._default_manager.all()
+            owner_pk = kwargs[self.owner_pk_url_kwarg]
+            queryset = queryset.filter(pk=owner_pk)
+            queryset = queryset.filter(**{self.owner_field: request.user})
+            return queryset.exists()
+        else:
+            return False
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.is_owner(request, *args, **kwargs):
+            return super(ObjectOwnerMixin, self).dispatch(request, *args, **kwargs)
+        else:
+            return HttpResponseForbidden()
+
 
 
 class DeactivateMixin(object):
