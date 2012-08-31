@@ -9,7 +9,7 @@ from django.views.generic import DeleteView
 from viewclass_mixins.views import DeactivateMixin
 
 class ObjectDeactivate(DeactivateMixin, DeleteView):
-   deactivation_field = 'live'
-   ...
+    deactivation_field = 'live'
+    ...
 ```
  

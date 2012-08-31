@@ -10,8 +10,8 @@ from django.views.generic import DeleteView
 from viewclass_mixins.views import DeactivateMixin
 
 class ObjectList(DeactivateMixin, DeleteView):
- 	model = Object
-   ...
+    model = Object
+    ...
 ```
 
 
