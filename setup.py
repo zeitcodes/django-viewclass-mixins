@@ -23,7 +23,7 @@ def get_readme():
     return ''
 
 setup(
-    name = 'Django ViewClass Mixins',
+    name = 'django-viewclass-mixins',
     version = __import__('viewclass_mixins').get_version().replace(' ', '-'),
     url = 'https://bitbucket.org/nextscreenlabs/django-viewclass-mixins',
     author = 'Jason Christa',
@@ -35,7 +35,7 @@ setup(
     install_requires = read_file('requirements.txt'),
     classifiers = [
         'Environment :: Web Environment',
-        'License :: OSI Approved :: BSD Liscense',
+        'License :: OSI Approved :: BSD License',
         'Framework :: Django',
         'Programming Language :: Python',
     ],

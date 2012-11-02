@@ -6,7 +6,7 @@ Provides some common mixin patterns for Django's View classes.
 Installation
 ------------
 
-Run `pip install hg+https://bitbucket.org/nextscreenlabs/django-viewclass-mixins`
+Run `pip install django-viewclass-mixins`
 
 View Mixins
 -----------
