@@ -28,6 +28,20 @@ class LoginMixin(object):
         return super(LoginMixin, self).dispatch(*args, **kwargs)
 
 
+class OwnershipMixin(object):
+    owner_field = 'user'
+
+    def is_owner(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return getattr(self.object, self.owner_field, None) == request.user
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.is_owner(request, *args, **kwargs):
+            return super(OwnershipMixin, self).dispatch(request, *args, **kwargs)
+        else:
+            return HttpResponseForbidden()
+
+
 class ObjectOwnerMixin(object):
     owner_model = None
     owner_pk_url_kwarg = 'pk'

@@ -14,7 +14,7 @@ View Mixins
 ###LoginMixin
 Ensures the view is being requested by an authenticated user or redirects to the login page. It behaves the same as the function decorator `login_required`.
 
-###ObjectOwnerMixin
+###OwnershipMixin
 A mixin to single-object views. Ensures the view is by requested by the owner of the requested object.
 
 ###DeactivateMixin
