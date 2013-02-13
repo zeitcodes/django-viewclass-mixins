@@ -36,6 +36,9 @@ class OwnershipMixin(object):
         return getattr(self.object, self.owner_field, None) == request.user
 
     def dispatch(self, request, *args, **kwargs):
+        self.request = request
+        self.args = args
+        self.kwargs = kwargs
         if self.is_owner(request, *args, **kwargs):
             return super(OwnershipMixin, self).dispatch(request, *args, **kwargs)
         else:
