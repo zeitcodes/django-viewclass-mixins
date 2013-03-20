@@ -1,5 +1,5 @@
-from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.utils.decorators import method_decorator
 
 
@@ -28,6 +28,22 @@ class LoginMixin(object):
         return super(LoginMixin, self).dispatch(*args, **kwargs)
 
 
+class StaffRequiredMixin(LoginMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_staff:
+            return super(StaffRequiredMixin, self).dispatch(request, *args, **kwargs)
+        else:
+            return HttpResponseForbidden()
+
+
+class SuperuserRequiredMixin(LoginMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            return super(SuperuserRequiredMixin, self).dispatch(request, *args, **kwargs)
+        else:
+            return HttpResponseForbidden()
+
+
 class OwnershipMixin(object):
     owner_field = 'user'
 
@@ -52,7 +68,7 @@ class ObjectOwnerMixin(object):
 
     def is_owner(self, request, *args, **kwargs):
         if request.user.is_authenticated():
-            queryset =  self.owner_model._default_manager.all()
+            queryset = self.owner_model._default_manager.all()
             owner_pk = kwargs[self.owner_pk_url_kwarg]
             queryset = queryset.filter(pk=owner_pk)
             queryset = queryset.filter(**{self.owner_field: request.user})
@@ -65,7 +81,6 @@ class ObjectOwnerMixin(object):
             return super(ObjectOwnerMixin, self).dispatch(request, *args, **kwargs)
         else:
             return HttpResponseForbidden()
-
 
 
 class DeactivateMixin(object):

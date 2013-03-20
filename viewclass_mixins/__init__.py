@@ -1,10 +1,11 @@
 __version_info__ = {
     'major': 0,
-    'minor': 2,
-    'micro': 1,
+    'minor': 3,
+    'micro': 0,
     'releaselevel': 'alpha',
-    'serial': 5
+    'serial': 6
 }
+
 
 def get_version(short=False):
     assert __version_info__['releaselevel'] in ('alpha', 'beta', 'final')
