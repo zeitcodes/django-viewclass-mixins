@@ -28,3 +28,9 @@ A mixin to the DeleteView. Instead of deleting an object it will mark it as inac
 
 ###FilterListMixin
 A mixin to the ListView. It will apply filters from the URL querystring to the underlying QuerySet before the list is returned.
+
+###ModelFormSetMixin
+A mixin to the CreateView and UpdateView. It take a list of FormSets and validates and saves them along with the main model.
+
+###HttpCacheMixin
+A mixin to any View. It has methods for setting HTTP cache headers like *Cache-Control*, *Vary*, *ETag*, and *Last-Modified*.
