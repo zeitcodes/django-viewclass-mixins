@@ -79,7 +79,33 @@ class ModelFormSetMixinTestCase(TestCase):
 class ObjectOwnerMixinTestCase(TestCase):
 
     def setUp(self):
-        pass
+        self.owner = User.objects.create_user('john', 'john@foo.com', '123')
+        self.other_user = User.objects.create_user('bob', 'bob@foo.com', '123')
+        self.test_model = TestModel.objects.create(user=self.owner)
+
+    def test_object_ownership_get(self):
+        url = reverse('object_owner', args=[self.test_model.pk])
+        with authenticated_client('john', '123') as owner:
+            response = owner.get(url)
+            self.assertEqual(response.status_code, 200)
+
+    def test_object_ownership_post(self):
+        url = reverse('object_owner', args=[self.test_model.pk])
+        with authenticated_client('john', '123') as owner:
+            response = owner.post(url)
+            self.assertEqual(response.status_code, 200)
+
+    def test_object_not_owner_get(self):
+        url = reverse('object_owner', args=[self.test_model.pk])
+        with authenticated_client('bob', '123') as owner:
+            response = owner.get(url)
+            self.assertEqual(response.status_code, 403)
+
+    def test_object_not_owner_post(self):
+        url = reverse('object_owner', args=[self.test_model.pk])
+        with authenticated_client('bob', '123') as owner:
+            response = owner.post(url)
+            self.assertEqual(response.status_code, 403)
 
 
 class OwnershipMixinTestCase(TestCase):

@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
 from models import TestModel
 from viewclass_mixins.views import DeactivateMixin, FilteredListMixin, HttpCacheMixin, LoginMixin, ModelFormSetMixin,\
     ObjectOwnerMixin, OwnershipMixin, StaffRequiredMixin, SuperuserRequiredMixin
@@ -31,7 +31,10 @@ class ModelFormSetView(ModelFormSetMixin, CreateView):
     template_name = "home.html"
 
 
-class ObjectOwnerView(ObjectOwnerMixin, TemplateView):
+class ObjectOwnerView(ObjectOwnerMixin, UpdateView):
+    model = TestModel
+    owner_model = TestModel
+    owner_field = 'user'
     template_name = "home.html"
 
 
