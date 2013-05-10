@@ -5,6 +5,7 @@ from models import TestModel
 
 
 class authenticated_client(object):
+
     def __init__(self, username, password):
         self.client = Client()
         self.username = username
@@ -18,10 +19,11 @@ class authenticated_client(object):
         self.client.logout()
 
 
-class DeactivateMixinTest(TestCase):
+class DeactivateMixinTestCase(TestCase):
 
     def setUp(self):
-        self.test_model = TestModel.objects.create()
+        self.user = User.objects.create_user('john', 'john@foo.com', '123')
+        self.test_model = TestModel.objects.create(user=self.user)
         self.client = Client()
 
     def test_deactivation_get(self):
@@ -38,19 +40,19 @@ class DeactivateMixinTest(TestCase):
         self.assertFalse(TestModel.objects.get(pk=self.test_model.pk).active)
 
 
-class FilteredListMixinTest(TestCase):
+class FilteredListMixinTestCase(TestCase):
 
     def setUp(self):
         pass
 
 
-class HttpCacheMixinTest(TestCase):
+class HttpCacheMixinTestCase(TestCase):
 
     def setUp(self):
         pass
 
 
-class LoginMixinTest(TestCase):
+class LoginMixinTestCase(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user('john', 'john@foo.com', '123')
@@ -68,31 +70,49 @@ class LoginMixinTest(TestCase):
         self.assertEqual(response.status_code, 302)
 
 
-class ModelFormSetMixinTest(TestCase):
+class ModelFormSetMixinTestCase(TestCase):
 
     def setUp(self):
         pass
 
 
-class ObjectOwnerTest(TestCase):
+class ObjectOwnerMixinTestCase(TestCase):
 
     def setUp(self):
         pass
 
 
-class OwnershipMixinTest(TestCase):
+class OwnershipMixinTestCase(TestCase):
+
+    def setUp(self):
+        self.owner = User.objects.create_user('john', 'john@foo.com', '123')
+        self.other_user = User.objects.create_user('bob', 'bob@foo.com', '123')
+        self.test_model = TestModel.objects.create(user=self.owner)
+
+    def test_ownership_is_owner(self):
+        url = reverse('ownership', args=[self.test_model.pk])
+        with authenticated_client('john', '123') as owner:
+            response = owner.get(url)
+            self.assertEqual(response.status_code, 200)
+
+    def test_ownership_not_owner(self):
+        url = reverse('ownership', args=[self.test_model.pk])
+        with authenticated_client('bob', '123') as client:
+            response = client.get(url)
+            self.assertEqual(response.status_code, 403)
+
+
+class StaffRequiredMixinTestCase(TestCase):
 
     def setUp(self):
         pass
 
 
-class StaffRequiredMixinTest(TestCase):
+class SuperuserRequiredMixinTestCase(TestCase):
 
     def setUp(self):
-        pass
+        self.super_user = User.objects.create_superuser('super_man', 'sm@foo.com', '123')
+        self.user = User.objects.create_user('john', 'john@foo.com', '123')
 
-
-class SuperuserRequiredMixin(TestCase):
-
-    def setUp(self):
+    def test_super_user_required(self):
         pass

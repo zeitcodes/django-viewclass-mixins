@@ -36,6 +36,7 @@ class ObjectOwnerView(ObjectOwnerMixin, TemplateView):
 
 
 class OwnershipView(OwnershipMixin, DetailView):
+    model = TestModel
     template_name = "home.html"
 
 

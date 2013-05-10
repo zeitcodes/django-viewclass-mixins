@@ -9,7 +9,7 @@ urlpatterns = patterns('',
     url(r'^login/$', LoginView.as_view(), name='login'),
     url(r'^model-form-set/$', ModelFormSetView.as_view(), name='model_form_set'),
     url(r'^object-owner/$', ObjectOwnerView.as_view(), name='object_owner'),
-    url(r'^ownership/$', OwnershipView.as_view(), name='ownership'),
+    url(r'^ownership/(?P<pk>\d+)$', OwnershipView.as_view(), name='ownership'),
     url(r'^staff-required/$', StaffRequiredView.as_view(), name='staff_required'),
     url(r'^superuser-required/$', SuperuserRequiredView.as_view(), name='superuser_required'),
 )
