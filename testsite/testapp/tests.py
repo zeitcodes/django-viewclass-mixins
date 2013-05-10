@@ -105,19 +105,34 @@ class OwnershipMixinTestCase(TestCase):
 class StaffRequiredMixinTestCase(TestCase):
 
     def setUp(self):
-        pass
+        self.staff_user = User.objects.create_user('staff_john', 'staffjohn@foo.com', '123')
+        self.staff_user.is_staff = True
+        self.staff_user.save()
+        self.user = User.objects.create_user('john', 'john@foo.com', '123')
+
+    def test_staff_required(self):
+        url = reverse('staff_required')
+        with authenticated_client('staff_john', '123') as staff:
+            response = staff.get(url)
+            self.assertEqual(response.status_code, 200)
+
+    def test_not_staff_user(self):
+        url = reverse('staff_required')
+        with authenticated_client('john', '123') as client:
+            response = client.get(url)
+            self.assertEqual(response.status_code, 403)
 
 
 class SuperuserRequiredMixinTestCase(TestCase):
 
     def setUp(self):
-        self.super_user = User.objects.create_superuser('super_man', 'sm@foo.com', '123')
+        self.super_user = User.objects.create_superuser('super_john', 'superjohn@foo.com', '123')
         self.user = User.objects.create_user('john', 'john@foo.com', '123')
 
     def test_super_user_required(self):
         url = reverse('superuser_required')
-        with authenticated_client('super_man', '123') as client:
-            response = client.get(url)
+        with authenticated_client('super_john', '123') as super_client:
+            response = super_client.get(url)
             self.assertEqual(response.status_code, 200)
 
     def test_not_super_user(self):
