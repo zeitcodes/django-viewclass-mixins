@@ -115,4 +115,13 @@ class SuperuserRequiredMixinTestCase(TestCase):
         self.user = User.objects.create_user('john', 'john@foo.com', '123')
 
     def test_super_user_required(self):
-        pass
+        url = reverse('superuser_required')
+        with authenticated_client('super_man', '123') as client:
+            response = client.get(url)
+            self.assertEqual(response.status_code, 200)
+
+    def test_not_super_user(self):
+        url = reverse('superuser_required')
+        with authenticated_client('john', '123') as client:
+            response = client.get(url)
+            self.assertEqual(response.status_code, 403)
