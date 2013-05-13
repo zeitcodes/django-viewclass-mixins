@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import Client, TestCase
@@ -43,7 +44,24 @@ class DeactivateMixinTestCase(TestCase):
 class FilteredListMixinTestCase(TestCase):
 
     def setUp(self):
-        pass
+        self.user = User.objects.create_user('john', 'john@foo.com', '123')
+        TestModel.objects.create(user=self.user, created=datetime(2013, 1, 1))
+        TestModel.objects.create(user=self.user, created=datetime(2012, 1, 1))
+        TestModel.objects.create(user=self.user, created=datetime(2011, 1, 1))
+        TestModel.objects.create(user=self.user, created=datetime(2010, 1, 1), active=False)
+        self.client = Client()
+
+    def test_filtered_list(self):
+        url = '%s%s' % (reverse('filtered_list'), '?active=True')
+        response = self.client.get(url)
+        test_models = response.context_data['testmodel_list']
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(test_models.count(), 3)
+
+    def test_filtered_list_multiple(self):
+        url = '%s%s' % (reverse('filtered_list'), '?active=True&created__gte=2012-1-1')
+        response = self.client.get(url)
+        test_models = response.context_data['testmodel_list']
 
 
 class HttpCacheMixinTestCase(TestCase):

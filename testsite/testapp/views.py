@@ -16,6 +16,7 @@ class DeactivateView(DeactivateMixin, DeleteView):
 
 
 class FilteredListView(FilteredListMixin, ListView):
+    model = TestModel
     template_name = "home.html"
 
 
