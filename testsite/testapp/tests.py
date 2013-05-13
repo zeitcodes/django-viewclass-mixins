@@ -59,9 +59,18 @@ class FilteredListMixinTestCase(TestCase):
         self.assertEqual(test_models.count(), 3)
 
     def test_filtered_list_multiple(self):
-        url = '%s%s' % (reverse('filtered_list'), '?active=True&created__gte=2012-1-1')
+        url = '%s%s' % (reverse('filtered_list'), '?active=1&created__gte=2012-1-1')
         response = self.client.get(url)
         test_models = response.context_data['testmodel_list']
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(test_models.count(), 2)
+
+    def test_filtered_list_ignores(self):
+        url = '%s%s' % (reverse('filtered_list'), '?random=1')
+        response = self.client.get(url)
+        test_models = response.context_data['testmodel_list']
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(test_models.count(), 4)
 
 
 class HttpCacheMixinTestCase(TestCase):
