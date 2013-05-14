@@ -2,7 +2,7 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import Client, TestCase
-from models import TestModel
+from models import Author
 
 
 class authenticated_client(object):
@@ -24,51 +24,51 @@ class DeactivateMixinTestCase(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user('john', 'john@foo.com', '123')
-        self.test_model = TestModel.objects.create(user=self.user)
+        self.test_model = Author.objects.create(user=self.user)
         self.client = Client()
 
     def test_deactivation_get(self):
         url = reverse('deactivate', args=[self.test_model.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(TestModel.objects.get(pk=self.test_model.pk).active)
+        self.assertTrue(Author.objects.get(pk=self.test_model.pk).active)
 
     def test_deactivation_post(self):
         url = reverse('deactivate', args=[self.test_model.pk])
         response = self.client.post(url)
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(TestModel.objects.filter(pk=self.test_model.pk).exists())
-        self.assertFalse(TestModel.objects.get(pk=self.test_model.pk).active)
+        self.assertTrue(Author.objects.filter(pk=self.test_model.pk).exists())
+        self.assertFalse(Author.objects.get(pk=self.test_model.pk).active)
 
 
 class FilteredListMixinTestCase(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user('john', 'john@foo.com', '123')
-        TestModel.objects.create(user=self.user, created=datetime(2013, 1, 1))
-        TestModel.objects.create(user=self.user, created=datetime(2012, 1, 1))
-        TestModel.objects.create(user=self.user, created=datetime(2011, 1, 1))
-        TestModel.objects.create(user=self.user, created=datetime(2010, 1, 1), active=False)
+        Author.objects.create(user=self.user, created=datetime(2013, 1, 1))
+        Author.objects.create(user=self.user, created=datetime(2012, 1, 1))
+        Author.objects.create(user=self.user, created=datetime(2011, 1, 1))
+        Author.objects.create(user=self.user, created=datetime(2010, 1, 1), active=False)
         self.client = Client()
 
     def test_filtered_list(self):
         url = '%s%s' % (reverse('filtered_list'), '?active=True')
         response = self.client.get(url)
-        test_models = response.context_data['testmodel_list']
+        test_models = response.context_data['author_list']
         self.assertEqual(response.status_code, 200)
         self.assertEqual(test_models.count(), 3)
 
     def test_filtered_list_multiple(self):
         url = '%s%s' % (reverse('filtered_list'), '?active=1&created__gte=2012-1-1')
         response = self.client.get(url)
-        test_models = response.context_data['testmodel_list']
+        test_models = response.context_data['author_list']
         self.assertEqual(response.status_code, 200)
         self.assertEqual(test_models.count(), 2)
 
     def test_filtered_list_ignores(self):
         url = '%s%s' % (reverse('filtered_list'), '?random=1')
         response = self.client.get(url)
-        test_models = response.context_data['testmodel_list']
+        test_models = response.context_data['author_list']
         self.assertEqual(response.status_code, 200)
         self.assertEqual(test_models.count(), 4)
 
@@ -103,9 +103,17 @@ class ModelFormSetMixinTestCase(TestCase):
         self.user = User.objects.create_user('john', 'john@foo.com', '123')
         self.client = Client()
 
-    def test_model_form_set(self):
+    def test_model_form_set_get(self):
         url = reverse('model_form_set')
         response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_model_form_set_post(self):
+        field_info = {
+            'name': 'john',
+        }
+        url = reverse('model_form_set')
+        response = self.client.post(url, field_info)
         self.assertEqual(response.status_code, 200)
 
 
@@ -114,7 +122,7 @@ class ObjectOwnerMixinTestCase(TestCase):
     def setUp(self):
         self.owner = User.objects.create_user('john', 'john@foo.com', '123')
         self.other_user = User.objects.create_user('bob', 'bob@foo.com', '123')
-        self.test_model = TestModel.objects.create(user=self.owner)
+        self.test_model = Author.objects.create(user=self.owner)
 
     def test_object_ownership_get(self):
         url = reverse('object_owner', args=[self.test_model.pk])
@@ -146,7 +154,7 @@ class OwnershipMixinTestCase(TestCase):
     def setUp(self):
         self.owner = User.objects.create_user('john', 'john@foo.com', '123')
         self.other_user = User.objects.create_user('bob', 'bob@foo.com', '123')
-        self.test_model = TestModel.objects.create(user=self.owner)
+        self.test_model = Author.objects.create(user=self.owner)
 
     def test_ownership_is_owner(self):
         url = reverse('ownership', args=[self.test_model.pk])

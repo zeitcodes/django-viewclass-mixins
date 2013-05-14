@@ -1,15 +1,19 @@
-from django.forms import ModelForm
-from models import TestModel, OtherTestModel
+from django import forms
+from django.forms.models import inlineformset_factory
+from models import Author, Book
 
-class TestModelForm(ModelForm):
-
-    class Meta:
-        model = TestModel
-        fields = ['name']
-
-
-class OtherTestModelForm(ModelForm):
+class AuthorForm(forms.ModelForm):
 
     class Meta:
-        model = OtherTestModel
-        fields = ['title']
+        model = Author
+        fields = ('name',)
+
+
+class BookForm(forms.ModelForm):
+
+    class Meta:
+        model = Book
+        fields = ('author', 'title', 'published',)
+
+
+BookFormSet = inlineformset_factory(Author, Book)

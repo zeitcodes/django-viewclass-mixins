@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
-from forms import TestModelForm, OtherTestModelForm
-from models import TestModel, OtherTestModel
+from forms import AuthorForm, BookForm, BookFormSet
+from models import Author, Book
 from viewclass_mixins.views import DeactivateMixin, FilteredListMixin, HttpCacheMixin, LoginMixin, ModelFormSetMixin,\
     ObjectOwnerMixin, OwnershipMixin, StaffRequiredMixin, SuperuserRequiredMixin
 
@@ -11,13 +11,13 @@ class SuccessView(TemplateView):
 
 
 class DeactivateView(DeactivateMixin, DeleteView):
-    model = TestModel
+    model = Author
     success_url = reverse_lazy('success')
     template_name = 'home.html'
 
 
 class FilteredListView(FilteredListMixin, ListView):
-    model = TestModel
+    model = Author
     template_name = "home.html"
 
 
@@ -30,20 +30,21 @@ class LoginView(LoginMixin, TemplateView):
 
 
 class ModelFormSetView(ModelFormSetMixin, CreateView):
-    model = TestModel
-    formset_classes = [TestModelForm, OtherTestModelForm]
-    template_name = "home.html"
+    model = Author
+    form_class = AuthorForm
+    formset_classes = [BookFormSet]
+    template_name = "model_form.html"
 
 
 class ObjectOwnerView(ObjectOwnerMixin, UpdateView):
-    model = TestModel
-    owner_model = TestModel
+    model = Author
+    owner_model = Author
     owner_field = 'user'
     template_name = "home.html"
 
 
 class OwnershipView(OwnershipMixin, DetailView):
-    model = TestModel
+    model = Author
     template_name = "home.html"
 
 
