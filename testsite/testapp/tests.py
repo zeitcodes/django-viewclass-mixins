@@ -100,7 +100,13 @@ class LoginMixinTestCase(TestCase):
 class ModelFormSetMixinTestCase(TestCase):
 
     def setUp(self):
-        pass
+        self.user = User.objects.create_user('john', 'john@foo.com', '123')
+        self.client = Client()
+
+    def test_model_form_set(self):
+        url = reverse('model_form_set')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
 
 
 class ObjectOwnerMixinTestCase(TestCase):

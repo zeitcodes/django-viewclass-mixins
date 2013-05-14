@@ -12,3 +12,12 @@ class TestModel(models.Model):
 
     def __unicode__(self):
         return self.name
+
+class OtherTestModel(models.Model):
+    user = models.ForeignKey(User)
+    title = models.CharField(max_length=100, default='Name')
+    visible = models.BooleanField(default=True)
+    created = models.DateTimeField(default=datetime.now())
+
+    def __unicode__(self):
+        return self.name

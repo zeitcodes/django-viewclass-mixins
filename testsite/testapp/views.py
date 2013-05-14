@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
-from models import TestModel
+from forms import TestModelForm, OtherTestModelForm
+from models import TestModel, OtherTestModel
 from viewclass_mixins.views import DeactivateMixin, FilteredListMixin, HttpCacheMixin, LoginMixin, ModelFormSetMixin,\
     ObjectOwnerMixin, OwnershipMixin, StaffRequiredMixin, SuperuserRequiredMixin
 
@@ -29,6 +30,8 @@ class LoginView(LoginMixin, TemplateView):
 
 
 class ModelFormSetView(ModelFormSetMixin, CreateView):
+    model = TestModel
+    formset_classes = [TestModelForm, OtherTestModelForm]
     template_name = "home.html"
 
 
