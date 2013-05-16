@@ -4,6 +4,9 @@
     {% if form %}
     <form method="post" action="">{% csrf_token %}
         {{ form }}
+        {% for formset in formsets %}
+            {{ formset }}
+        {% endfor %}
         <input type="submit" value="Submit" />
     </form>
     {% endif %}

@@ -100,7 +100,8 @@ class LoginMixinTestCase(TestCase):
 class ModelFormSetMixinTestCase(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user('john', 'john@foo.com', '123')
+        self.user = User.objects.create_user('john', 'john@foo.com', '123', pk=1)
+        self.author = Author.objects.create(user=self.user)
         self.client = Client()
 
     def test_model_form_set_get(self):
@@ -110,11 +111,16 @@ class ModelFormSetMixinTestCase(TestCase):
 
     def test_model_form_set_post(self):
         field_info = {
-            'name': 'john',
+            'name': 'John',
+            'book_set-TOTAL_FORMS': 1,
+            'book_set-INITIAL_FORMS': 0,
+            'book_set-MAX_NUM_FORMS': 1000,
+            'book_set-0-title': 'Title',
+            'book_set-0-created': datetime.now(),
         }
         url = reverse('model_form_set')
         response = self.client.post(url, field_info)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
 
 class ObjectOwnerMixinTestCase(TestCase):

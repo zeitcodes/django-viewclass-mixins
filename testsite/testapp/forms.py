@@ -13,7 +13,7 @@ class BookForm(forms.ModelForm):
 
     class Meta:
         model = Book
-        fields = ('author', 'title', 'published',)
+        fields = ('author', 'title',)
 
 
-BookFormSet = inlineformset_factory(Author, Book)
+BookFormSet = inlineformset_factory(Author, Book, extra=1, can_delete=False)
