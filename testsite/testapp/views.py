@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
 from forms import AuthorForm, BookForm, BookFormSet
@@ -20,8 +21,28 @@ class FilteredListView(FilteredListMixin, ListView):
     template_name = 'home.html'
 
 
-class HttpCacheView(HttpCacheMixin, TemplateView):
+class HttpCacheLastModifiedView(HttpCacheMixin, TemplateView):
     template_name = 'home.html'
+
+    def get_last_modified(self):
+        return datetime(2000, 1, 1)
+
+
+class HttpCacheVariesView(HttpCacheMixin, TemplateView):
+    cache_varies = ['Vary']
+    template_name = 'home.html'
+
+
+class HttpCacheTimeoutView(HttpCacheMixin, TemplateView):
+    cache_timeout = 300
+    template_name = 'home.html'
+
+
+class HttpCacheETagView(HttpCacheMixin, TemplateView):
+    template_name = 'home.html'
+
+    def get_etag(self, ):
+        return 'etag_hash'
 
 
 class LoginView(LoginMixin, TemplateView):

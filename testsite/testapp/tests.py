@@ -76,7 +76,27 @@ class FilteredListMixinTestCase(TestCase):
 class HttpCacheMixinTestCase(TestCase):
 
     def setUp(self):
-        pass
+        self.client = Client()
+
+    def test_http_cache_last_modified(self):
+        url = reverse('http_cache_last_modified')
+        response = self.client.get(url)
+        self.assertEqual(response.get('last-modified'), datetime(2000, 1, 1).strftime('%Y-%m-%d %H:%M:%S'))
+
+    def test_http_cache_varies(self):
+        url = reverse('http_cache_varies')
+        response = self.client.get(url)
+        self.assertEqual(response.get('vary'), 'Vary')
+
+    def test_http_cache_timeout(self):
+        url = reverse('http_cache_timeout')
+        response = self.client.get(url)
+        self.assertEqual(response.get('cache-control'), 'max-age=300')
+
+    def test_http_cache_etag(self):
+        url = reverse('http_cache_etag')
+        response = self.client.get(url)
+        self.assertEqual(response.get('etag'), 'etag_hash')
 
 
 class LoginMixinTestCase(TestCase):
