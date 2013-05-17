@@ -196,8 +196,8 @@ class StaffRequiredMixinTestCase(TestCase):
 
     def test_staff_required(self):
         url = reverse('staff_required')
-        with authenticated_client('staff_john', '123') as staff:
-            response = staff.get(url)
+        with authenticated_client('staff_john', '123') as client:
+            response = client.get(url)
             self.assertEqual(response.status_code, 200)
 
     def test_not_staff_user(self):
@@ -214,8 +214,8 @@ class SuperuserRequiredMixinTestCase(TestCase):
 
     def test_super_user_required(self):
         url = reverse('superuser_required')
-        with authenticated_client('super_john', '123') as super_client:
-            response = super_client.get(url)
+        with authenticated_client('super_john', '123') as client:
+            response = client.get(url)
             self.assertEqual(response.status_code, 200)
 
     def test_not_super_user(self):
