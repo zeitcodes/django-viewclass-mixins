@@ -1,6 +1,7 @@
+from .models import Author, Book
 from django import forms
 from django.forms.models import inlineformset_factory
-from models import Author, Book
+
 
 class AuthorForm(forms.ModelForm):
 

@@ -74,7 +74,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'testapp',
-    'viewclass_mixins',
 )
 
 

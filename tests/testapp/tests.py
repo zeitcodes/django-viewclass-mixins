@@ -1,12 +1,11 @@
+from .models import Author
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import Client, TestCase
-from models import Author
 
 
 class authenticated_client(object):
-
     def __init__(self, username, password):
         self.client = Client()
         self.username = username
@@ -21,7 +20,6 @@ class authenticated_client(object):
 
 
 class DeactivateMixinTestCase(TestCase):
-
     def setUp(self):
         self.user = User.objects.create_user('john', 'john@foo.com', '123')
         self.test_model = Author.objects.create(user=self.user)
@@ -42,7 +40,6 @@ class DeactivateMixinTestCase(TestCase):
 
 
 class FilteredListMixinTestCase(TestCase):
-
     def setUp(self):
         self.user = User.objects.create_user('john', 'john@foo.com', '123')
         Author.objects.create(user=self.user, created=datetime(2013, 1, 1))
@@ -74,7 +71,6 @@ class FilteredListMixinTestCase(TestCase):
 
 
 class HttpCacheMixinTestCase(TestCase):
-
     def setUp(self):
         self.client = Client()
 
@@ -100,7 +96,6 @@ class HttpCacheMixinTestCase(TestCase):
 
 
 class LoginMixinTestCase(TestCase):
-
     def setUp(self):
         self.user = User.objects.create_user('john', 'john@foo.com', '123')
         self.client = Client()
@@ -118,7 +113,6 @@ class LoginMixinTestCase(TestCase):
 
 
 class ModelFormSetMixinTestCase(TestCase):
-
     def setUp(self):
         self.user = User.objects.create_user('john', 'john@foo.com', '123', pk=1)
         self.author = Author.objects.create(user=self.user)
@@ -144,7 +138,6 @@ class ModelFormSetMixinTestCase(TestCase):
 
 
 class ObjectOwnerMixinTestCase(TestCase):
-
     def setUp(self):
         self.owner = User.objects.create_user('john', 'john@foo.com', '123')
         self.other_user = User.objects.create_user('bob', 'bob@foo.com', '123')
@@ -176,7 +169,6 @@ class ObjectOwnerMixinTestCase(TestCase):
 
 
 class OwnershipMixinTestCase(TestCase):
-
     def setUp(self):
         self.owner = User.objects.create_user('john', 'john@foo.com', '123')
         self.other_user = User.objects.create_user('bob', 'bob@foo.com', '123')
@@ -196,7 +188,6 @@ class OwnershipMixinTestCase(TestCase):
 
 
 class StaffRequiredMixinTestCase(TestCase):
-
     def setUp(self):
         self.staff_user = User.objects.create_user('staff_john', 'staffjohn@foo.com', '123')
         self.staff_user.is_staff = True
@@ -217,7 +208,6 @@ class StaffRequiredMixinTestCase(TestCase):
 
 
 class SuperuserRequiredMixinTestCase(TestCase):
-
     def setUp(self):
         self.super_user = User.objects.create_superuser('super_john', 'superjohn@foo.com', '123')
         self.user = User.objects.create_user('john', 'john@foo.com', '123')
