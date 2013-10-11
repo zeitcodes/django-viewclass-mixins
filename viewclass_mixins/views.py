@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.utils.decorators import method_decorator
 from django.utils.cache import patch_response_headers, patch_vary_headers
+from django.views.decorators.csrf import csrf_exempt
 
 
 class FilteredListMixin(object):
@@ -27,6 +28,12 @@ class LoginMixin(object):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(LoginMixin, self).dispatch(*args, **kwargs)
+
+
+class CsrfExemptMixin(object):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(CsrfExemptMixin, self).dispatch(*args, **kwargs)
 
 
 class StaffRequiredMixin(LoginMixin):
