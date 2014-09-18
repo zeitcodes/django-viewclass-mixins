@@ -34,3 +34,6 @@ A mixin to the CreateView and UpdateView. It take a list of FormSets and validat
 
 ###HttpCacheMixin
 A mixin to any View. It has methods for setting HTTP cache headers like *Cache-Control*, *Vary*, *ETag*, and *Last-Modified*.
+
+###CorsMixin
+A mixin to a Django Rest Framework View. It sets permissive CORS headers and handles the OPTIONS response.

@@ -200,3 +200,21 @@ class HttpCacheMixin(object):
             if len(cache_varies):
                 patch_vary_headers(response, cache_varies)
         return response
+
+
+class CorsMixin(object):
+    allowed_headers = ('Authorization', 'Keep-Alive', 'User-Agent', 'X-Requested-With', 'If-Modified-Since',
+                       'Cache-Control', 'Content-Type')
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super(CorsMixin, self).dispatch(request, *args, **kwargs)
+        response['Access-Control-Allow-Origin'] = request.META.get('HTTP_ORIGIN', '*')
+        response['Access-Control-Allow-Credentials'] = bool(self.authentication_classes)
+        response['Access-Control-Allow-Methods'] = self.allowed_methods
+        response['Access-Control-Allow-Headers'] = ','.join(self.allowed_headers)
+        return response
+
+    def options(self, request, *args, **kwargs):
+        response = HttpResponse(status_code=204)
+        response['Access-Control-Max-Age'] = 1728000
+        return response
