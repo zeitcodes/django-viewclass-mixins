@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.utils.decorators import method_decorator
 from django.utils.cache import patch_response_headers, patch_vary_headers
 from django.views.decorators.csrf import csrf_exempt
