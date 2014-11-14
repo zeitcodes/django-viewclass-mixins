@@ -207,7 +207,10 @@ class CorsMixin(object):
                        'Cache-Control', 'Content-Type')
 
     def dispatch(self, request, *args, **kwargs):
-        response = super(CorsMixin, self).dispatch(request, *args, **kwargs)
+        if request.method == 'OPTIONS':
+            response = self.options(request, *args, **kwargs)
+        else:
+            response = super(CorsMixin, self).dispatch(request, *args, **kwargs)
         response['Access-Control-Allow-Origin'] = request.META.get('HTTP_ORIGIN', '*')
         response['Access-Control-Allow-Credentials'] = bool(self.authentication_classes)
         response['Access-Control-Allow-Methods'] = self.allowed_methods
@@ -215,6 +218,6 @@ class CorsMixin(object):
         return response
 
     def options(self, request, *args, **kwargs):
-        response = HttpResponse(status_code=204)
+        response = HttpResponse(status=204)
         response['Access-Control-Max-Age'] = 1728000
         return response
