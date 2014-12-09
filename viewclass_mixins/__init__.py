@@ -1,9 +1,9 @@
 __version_info__ = {
     'major': 1,
     'minor': 1,
-    'micro': 2,
+    'micro': 3,
     'releaselevel': 'final',
-    'serial': 11
+    'serial': 12
 }
 
 

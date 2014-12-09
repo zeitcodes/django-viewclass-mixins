@@ -213,7 +213,7 @@ class CorsMixin(object):
             response = super(CorsMixin, self).dispatch(request, *args, **kwargs)
         response['Access-Control-Allow-Origin'] = request.META.get('HTTP_ORIGIN', '*')
         response['Access-Control-Allow-Credentials'] = bool(self.authentication_classes)
-        response['Access-Control-Allow-Methods'] = self.allowed_methods
+        response['Access-Control-Allow-Methods'] = ','.join(self.allowed_methods)
         response['Access-Control-Allow-Headers'] = ','.join(self.allowed_headers)
         return response
 
